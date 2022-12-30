@@ -2,7 +2,7 @@
 
 ### Let's start with your day to day using JavaScript...
 
-You are going to build some kind of counter feature to know how many students have long names, and write something like this:
+You are building some kind of counter feature to know how many students have long names, and write something like this:
 
 ```javascript
 const students = ['Miguel', 'Rodrigo', 'Arturo'];
