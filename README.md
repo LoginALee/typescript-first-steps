@@ -393,6 +393,229 @@ type Dog = {
 type LivingBeing = Person | Dog | Plant
 ```
 
+## Objects
+
+When we create an object in Javascript, Typescript will infer his types, for example:
+
+```javascript
+const Book = {
+  title: 'The little prince'
+  pages: 92
+}
+// Typescript knows that the typeof Book is
+{ title: string, pages: number }
+
+// So, if we try to access a property that does not
+// exists in Book, TS will complain:
+
+Book.finished
+// Error: Property 'finished' does not
+// exist on type ' { title: string, pages: number } '
+```
+
+### Object Types
+
+Like we see before; it's common to use Type aliases to assign them to our objects
+
+```javascript
+type Car = {
+  name: string
+  model: number
+  color: string
+}
+
+const Toyota: Car
+const Mazda: Car
+```
+
+When we tell Typescript what type an object is, it will check that it has all the required properties that his type has. If any required property is missing, Typescript will throw an Error.
+
+```javascript
+type Car = {
+  name: string
+  model: number
+  color: string
+}
+
+const Toyota: Car = {
+  name: 'Corolla',
+  color: 'Red'
+}
+// Property 'model' is missing in type '{ name: string, color: string } '
+// but required in type 'Car'
+```
+
+Another important note is that their properties types must match
+
+```javascript
+type Car = {
+  model: number,
+}
+
+const Toyota: Car = {
+  model: '2020',
+}
+// Error: Type 'string' is not assignable to type 'number'
+```
+
+#### Excess Property Checking
+
+What if our object has all the properties of the type we are telling Typescript out object is, but also has more that are not specified in that type? Typescript will not be happy
+
+```javascript
+type Car = {
+  model: number,
+}
+
+const Toyota: Car = {
+  model: '2020',
+  maxPassengers: 4,
+}
+//Error type '{ model: string, maxPassengers: number }' is not assignable to type 'Car'.
+// Object literal may only specify known properties.
+// and 'maxPassengers' does not exist on type 'Car'
+```
+
+Excess of properties are a code smell, and they often mean mistyped property names or unused code.
+
+### Nested Object types
+
+We can declare Objects inside object types and make them as complex as we need:
+
+```javascript
+type School = {
+  name: string
+  location: {
+    street: string
+    externalNumber: number
+    neighborhood: string
+  }
+}
+```
+
+It's good practice to define our nested object types into their own type to improve readability and clean Typescript error messages:
+
+```javascript
+type Location = {
+  street: string
+  externalNumber: number
+  neighborhood: string
+}
+
+type School = {
+  name: string
+  location: Location
+}
+```
+
+### Optional properties
+
+When defining object types we can say that a property can be present or not:
+
+```javascript
+type Laptop = {
+  brand: string
+  model: string
+  hasStickers?: boolean
+}
+
+const myLaptop: Laptop = {
+  brand: 'MSI',
+  model: '3FN2',
+  hasStickers: true
+}
+
+const workLaptop: Laptop = {
+  brand: 'Dell',
+  model: '29NDU29'
+}
+```
+
+Note: optional properties are not the same as undefined values; optional properties can exist or not, but undefined values need to be there, otherwise TS will complain
+
+```javascript
+type Laptop = {
+  brand: string
+  model: string
+  hasStickers: boolean | undefined
+}
+
+const myLaptop: Laptop = {
+  brand: 'MSI',
+  model: '3FN2',
+  hasStickers: true
+}
+
+const workLaptop: Laptop = {
+  brand: 'Dell',
+  model: '29NDU29'
+  hasStickers: undefined
+}
+
+const gamingLaptop: Laptop = {
+  brand: 'Razer',
+  model: '29NIA920H'
+}
+// Error: property 'hasStickers' is missing in
+// type { brand: string, model: string }' but
+// required in type 'Laptop'
+```
+
+### Discriminated Unions
+
+There is a popular pattern inside Object types called discriminated unions, which is to have a property on the object to indicate what shape the object is.
+
+This helps TS to perform type narrowing in type guards, for example:
+
+```javascript
+type racingCar = {
+  model: string
+  hasTurbo: boolean
+  type: 'RACING'
+}
+
+type familyCar = {
+  model: string
+  hasTVScreen: boolean
+  type: 'FAMILY'
+}
+
+type Car = racingCar | familyCar
+
+const firstCar: Car
+
+if(firstCar.type === 'FAMILY'){
+  firstCar.hasTVScreen // OK
+} else{
+  firstCar.hasTurbo // OK
+}
+```
+
+### Intersection Types
+
+Typescript allows to represent a type that is multiple types all in one; using the intersection type symbol: _&_
+
+```javascript
+type Electronic = {
+  needsElectricity: true
+}
+
+type Portable = {
+  hasBattery: true
+}
+
+type CellPhone: Electronic & Portable
+```
+
+This is the same as:
+
+```javascript
+type CellPhone = {
+  hasBattery: true
+  needsElectricity: true
+}
+```
+
 ---
 
 ## Documentation
