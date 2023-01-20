@@ -616,6 +616,100 @@ type CellPhone = {
 }
 ```
 
+## Functions
+
+### Parameters
+
+Inside our JavaScript functions we can tell Typescript which type are our parameters, for example:
+
+```javascript
+const isEven = (number: number) => number % 2 === 0
+```
+
+here we expect only one parameter of type number, if our function receives more or less than one parameter and a different type than number, Typescript will throw an error:
+
+```javascript
+isEven(29) // Ok
+
+isEven(10, 'extra param')
+// Error: Expected 1 argument, but got 2
+```
+
+But what if we want an optional parameter? we can do that, we just need to add it the _?_ symbol and put it at the end of our parameters
+
+```javascript
+// Here we gave a default value for our optional parameter
+const isEven = (number: number, outputResult?: boolean = false) => {
+  const result = number % 2 === 0
+
+  if (outputResult) {
+    console.log(result)
+  }
+
+  return result
+}
+
+isEven(29) // Ok
+
+isEven(2, true) // Ok
+
+isEven(10, true, true)
+// Error: Expected 2 arguments, but got 3
+```
+
+We can also use rest parameters in our functions using the spread operator with this syntax:
+
+```javascript
+const areEven = (...numbers: number[]) =>
+  numbers.every((number) => number % 2 === 0)
+```
+
+### Return types
+
+Typescript is smart enough to infer which type our areEven function type, which is boolean, now we can make this more clear adding an implicit return type (which is not mandatory):
+
+```javascript
+const areEven = (...numbers: number[]): boolean =>
+  numbers.every((number) => number % 2 === 0)
+```
+
+### Function types
+
+We can declare a Function type for our functions like this:
+
+```javascript
+type AreEven = (...numbers: number[]) => boolean
+// Here we are telling his parameters and return types
+
+const areEven: AreEven = (...numbers) =>
+  numbers.every((number) => number % 2 === 0)
+
+areEven(2, 2, 2) // Ok
+```
+
+#### Void type
+
+Sometimes our functions not return anything, and Typescript uses the _void_ keyword for those cases:
+
+```javascript
+type Log: (text: string) => void
+
+const log: Log = (text) => console.log(text)
+
+Log('Heeey!') // Ok
+```
+
+Note: Every JavaScript function returns undefined if we don't specify otherwise, so void means that we will ignore the function return value; void is not a value that can be returned.
+
+#### Never type
+
+Functions also can not return nothing at all, and that is where the never type comes in. This is not the same as void though; with never, our function does not return, and void returns nothing.
+
+```javascript
+const errorHandler = (errorMessage) => throw new Error(errorMessage)
+// Here our function type is never
+```
+
 ---
 
 ## Documentation
