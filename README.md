@@ -710,6 +710,123 @@ const errorHandler = (errorMessage) => throw new Error(errorMessage)
 // Here our function type is never
 ```
 
+## Arrays
+
+When we declare an array, Typescript will infer his type and won't allow us to push other type of items to it
+
+```javascript
+const musicCategories = ['Pop', 'Classic', 'Rock']
+
+musicCategories.push('Jazz') // Ok
+
+musicCategories.push(19)
+// Argument of type 'number' is not assignable to parameter of type 'string'
+```
+
+if we don't want to give an initial value to our array it's cool, we just need to tell TS which types to accept:
+
+```javascript
+let musicCategories: string[]
+
+musicCategories.push('Jazz') // Ok
+
+musicCategories.push(19)
+// Argument of type 'number' is not assignable to parameter of type 'string'
+```
+
+We can have arrays with multiple types inside
+
+```javascript
+// Here, we have an array which holds functions that returns numbers
+const arrayOfFunctions: (() => number)[]
+
+// Here, we have an array which can hold multiple types
+const arrayOfMultipleTypes: (string | number | boolean)[]
+```
+
+If we do not tell Typescript which types will store our array, it will assume that it can hold any type:
+
+```javascript
+let foods = []
+// Type: any[]
+
+foods.push('pineapple') // Ok
+foods.push(13) // Ok
+```
+
+However, this defeats the purpose of using Typescript; which is have our variables, functions, etc. well defined.
+
+### Multidimensional Arrays
+
+When typing a multidimensional array, the same concepts apply, and it depends in how many dimensions does our array has:
+
+```javascript
+let arrayOfArrays: number[][]
+// Here, we have a 2 dimensions array
+
+let arrayOfArrayOfArrays: number[][][]
+// Here, we have a 3 dimensions array
+
+// And so on and so forth...
+```
+
+### Array members
+
+When we extract a member from an array and assign it to a variable, TS will use the Array type to know what type our variable will be:
+
+```javascript
+const foods: string[] = ['apple', 'watermelon', 'pineapple']
+
+const myFood = foods[2]
+// myFood will be of type 'string'
+```
+
+But, what happens if we access an index which is not defined? Typescript by default won't yell at us:
+
+```javascript
+const foods: string[] = ['apple']
+
+const myFood = foods[300]
+// TS won't report any error
+```
+
+### Using the spread operator
+
+When using the spread operator with arrays, TS will infer the types from the spreaded arrays:
+
+```javascript
+const foods: string[] = ['apple']
+const grades: number[] = [10, 10, 9, 5, 8]
+
+const myJoinArray = [...foods, ...grades]
+// myJoinArray type will be a join from foods and grades types:
+// (string | number)[]
+```
+
+### Tuples
+
+Tuples are fixed size arrays, which have a specific type for each index:
+
+```javascript
+let ownerAndPet: [string, string] = ['Ale', 'Mr. Moustache']
+
+ownerAndPet = [10, 'Picles']
+// Error: Type 'number' is not assignable to type 'string'
+
+ownerAndPet = ['Rodolfo']
+// Error: Type '[string]' is not assignable to type '[string, string]'
+```
+
+We can be more strict with our tuples if we want them to be more explicit and read-only, using the _as const_ keywords:
+
+```javascript
+const ownerAndPet: [string, string] = ['Ale', 'Mr. Moustache'] as const
+
+ownerAndPet[0] = 'George'
+//Error: cannot assign to '0'
+// because it is a read-only property
+```
+
 ---
 
 ## Documentation
