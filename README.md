@@ -823,9 +823,239 @@ We can be more strict with our tuples if we want them to be more explicit and re
 const ownerAndPet: [string, string] = ['Ale', 'Mr. Moustache'] as const
 
 ownerAndPet[0] = 'George'
-//Error: cannot assign to '0'
+// Error: cannot assign to '0'
 // because it is a read-only property
 ```
+
+## Interfaces
+
+Interfaces are very similar to Type aliases; They describe which types are the keys inside an object:
+
+```javascript
+// Type alias
+type Dog = {
+  name: string
+  race: string
+  age: number
+}
+
+
+// Interface
+interface Dog {
+  name: string
+  race: string
+  age: number
+}
+```
+
+The main differences between these two are:
+
+- Interfaces can be joined or merged to create a more complete interface
+
+- Interfaces can be used to check the structure of a JavaScript class, and type aliases can't
+
+- Interfaces tend to be faster for the Typescript type checker, because it can be cached easily
+
+- Error messages for interfaces tend to be more readable
+
+### Features both interfaces and type aliases have
+
+#### Optional properties
+
+Interfaces can also have optional properties inside their declaration
+
+```javascript
+interface House {
+  color: string
+  roomsNumber?: number
+}
+```
+
+#### Read-only properties
+
+If we need some property to be read-only we can add the reserved word _readonly_
+
+```javascript
+interface House {
+  readonly color: string
+}
+
+// And if we try to update it, and Error will show up
+
+let myHouse: House = {
+  color: 'Red'
+}
+
+myHouse.color = 'White'
+// Error: Cannot assign to 'color' because it is
+// a read-only property.
+```
+
+#### Functions and methods
+
+There are 2 ways we can say that a object property is a function; Method syntax and Property syntax:
+
+**_Method Syntax_**
+
+```javascript
+interface Dog {
+  walk(): string;
+}
+
+const myDog: Dog = {
+  walk() {
+    return 'Im Walking on Sunshine!'
+  },
+}
+```
+
+**_Property Syntax_**
+
+```javascript
+interface Dog {
+  walk: () => string;
+}
+
+const myDog: Dog = {
+  walk: () => 'Im Walking on Sunshine!',
+}
+```
+
+The main differences between Method and property declarations are:
+
+- Methods can't be declared as readonly
+- When merging interfaces, each one is treated differently
+
+We can choose whichever we want, unless we need something specific to the _this_ scope
+
+### Call Signatures
+
+Call signatures are which shape does our functions will have, for example:
+
+```javascript
+interface Computer {
+  powerButtonHandler(isOn: boolean) => void
+}
+
+// Here, we need to have the same parameters and return type
+// for the powerButtonHandler function in our Computer interface
+
+const azus: Computer = {
+  powerButtonHandler(isOn) => {
+    isOn ? turnOff() : turnOn()
+  }
+} // Ok
+```
+
+### Index Signatures
+
+We can accept values under some kind of wildcard inside our interfaces, this is super useful in some cases that we want to be more general about our keys.
+
+To archive that, we use this syntax:
+
+```javascript
+interface Obj {
+  [a: string]: boolean;
+}
+```
+
+Here, we are telling TS that our interface Obj can accept any property as long as it is a string, and that it's value needs to be a boolean type:
+
+```javascript
+interface Obj {
+  [a: string]: boolean;
+}
+// OR
+interface Obj {
+  [a: number]: boolean;
+}
+// Index signatures can be strings or numbers
+// JavaScript will converts them to strings
+
+let myObj: Obj
+
+myObj.name = true // Ok
+myObj.lastName = 'Martinez'
+// Error: Type 'string' is n ot assignable to type 'boolean'
+```
+
+Index signatures can lead to undefined errors, because TS will not catch them, but instead they will pop up during runtime:
+
+```javascript
+interface Obj {
+  [a: string]: string[];
+}
+
+let myObj: Obj
+
+myObj.name.length
+// TS will know that name has a type of string[]
+// but in runtime it's value will be undefined
+```
+
+### Nested interfaces
+
+Interfaces can be as complex as we need them to, because in a real case scenario our Objects are must likely to have multiple levels
+
+```javascript
+interface Library {
+  book: {
+    name: string
+    author: {
+      name: string
+    }
+    category: string
+  }
+}
+```
+
+### Interface Extensions
+
+Interface extensions are similar to inheritance in POO, because we extend from a base interface or multiple ones, and our new interface needs to have the same properties as our base interface, plus the specific properties that we give to our new interface:
+
+```javascript
+interface LivingBeing {
+ needsOxygen: boolean
+ obtainsEnergyFrom: string
+ category: string
+}
+
+interface HumanBeing extends LivingBeing {
+  name: string
+  lastName: string
+  birth: Date
+  canWalk: boolean
+}
+```
+
+Now, what if we have a property inside HumanBeing with the same name as in LivingBeing ? TS will enforce that that property must be assignable to its base property.
+
+### Interface Merging
+
+The last and more interesting interface property is merging; we can declare multiple interfaces with the same name and they will merge into a single interface:
+
+```javascript
+interface Dog {
+  name: string;
+}
+
+interface Dog {
+  age: number;
+}
+
+interface Dog {
+  walk: () => string;
+}
+
+// The result is
+// interface Dog {
+// name: string
+// age: number
+// walk: () => string
+//}
+```
+
+However, merging is not used very often and it can lead to confusion in the code base, but it may be useful in some scenarios.
 
 ---
 
