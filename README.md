@@ -1,5 +1,20 @@
 ## Typescript first steps :footprints:
 
+![image](https://user-images.githubusercontent.com/25086862/217956121-cd2bc645-296b-4721-8895-b3960338f510.png)
+
+
+Hello there!, i wanted to improve my Typescript knowledge and i tought: 
+why not writing a couple of blogposts? so...here we are!
+
+I have used Typescript on my day to day, but i wanted to go beyond that and found an awesome book
+called _Learning Typescript_ by Josh Goldberg and i wanted to write what i was learning from each chapter
+
+I am halfway through the book so im thinking of writting maybe one or two more blogpost, and this one 
+escenially has all the basic stuff that a Javascript developer needs to get into the Blue and type safe Typescript word ✨
+
+Aaaand one other thing before you start reading; beware this is a long blogpost, so my recommendation is to save it 
+in your bookmarks, read a couple of topics and then practice what you just learned 🤓
+
 ### Let's start with your day to day using JavaScript...
 
 You are building some kind of counter feature to know how many students have long names, and write something like this:
@@ -1056,6 +1071,15 @@ interface Dog {
 ```
 
 However, merging is not used very often and it can lead to confusion in the code base, but it may be useful in some scenarios.
+
+## Conclusion 
+If you made it all the way to here hurraaay!\
+These are the basic stuff to get into the Typescript world,\
+i hope you learned a lot from it as much as i did writting it, \
+and please if you have any feedback or comments leave them below!
+
+Hope to see you in the next blogpost!
+
 
 ---
 
